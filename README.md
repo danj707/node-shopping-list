@@ -1,4 +1,4 @@
- ## node-shopping-list
+## node-shopping-list
 
 Shopping list utilizing node.js, express, testing with mocha/chai
 

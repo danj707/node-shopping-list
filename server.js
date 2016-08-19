@@ -19,15 +19,13 @@ Storage.prototype.add = function(name) {
 
 //delete method, takes the ID and splices it from the items array, using ID
 Storage.prototype.delete = function(id) {
-
-    var msg;
+    
     if(!this.items[id]) {
-        msg = "No such ID";
+        //Id doesn't exist, return an error
     } else {
         delete this.items[id];
-        msg = "Success";
     }
-    return msg;
+    return this.items;
 };
 
 //update method, changes the name of object item
@@ -37,14 +35,11 @@ Storage.prototype.update = function(id,name) {
     if(this.items[id]) {
         //item already exists, update it
         this.items[id].name = name;
-        return true;
-    } else if(!this.items[id]) {
+    } else {
         //no such item # exists, create it
         storage.add(name);
-        return true;
-    } else {
-        return false;
     }
+    return this.items;
 };
 
 //creates a new storage object, adds a list of 3 items
@@ -90,12 +85,8 @@ app.delete('/items/:id', jsonParser, function(request, response) {
     var id = request.params.id;
 
     var item = storage.delete(id);
-        
-    if(item == 'No such ID') {
-            response.status(404).json("ID not found");
-    } else {
-            response.status(200).json("Success!");
-    }
+
+    response.status(200).json(item);
 
     });
 
@@ -111,17 +102,14 @@ app.put('/items/:id/:name', jsonParser, function(request, response) {
     var name = request.params.name;
 
     //gets the item request name, creates a new object, calls add method, sends response 200 'ok'
-    var update = storage.update(id,name);
+    var item=storage.update(id,name);
     
-    response.status(200).json("Success!");
-
+    response.status(200).json(item);
     });
 
 //server listener
 app.listen(process.env.PORT, process.env.IP);
 
-
-/////Endpoint Description
-//// GET /items
-//// DELETE /items/id
-//// PUT /items/id/name
+//export objects for chai/mocha
+exports.app = app;
+exports.storage = storage;
