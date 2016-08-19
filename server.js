@@ -23,7 +23,8 @@ Storage.prototype.delete = function(id) {
     if(!this.items[id]) {
         //Id doesn't exist, return an error
     } else {
-        delete this.items[id];
+        //delete this.items[id];
+        return this.items.splice(id,1);
     }
     return this.items;
 };
@@ -82,9 +83,8 @@ app.delete('/items/:id', jsonParser, function(request, response) {
     if (!request.body) {
         return response.sendStatus(400);
     }
-    var id = request.params.id;
 
-    var item = storage.delete(id);
+    var item = storage.delete(request.params.id);
 
     response.status(200).json(item);
 
